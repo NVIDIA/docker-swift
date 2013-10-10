@@ -1,0 +1,9 @@
+{
+  "name": "docker-swift-aio",
+  "private": true,
+  "version": "0.0.1",
+  "description": "OpenStack Swift All-in-one on Ubuntu",
+  "author": "Peter Binkley <peter.binkley@ualberta.ca>",
+  "dependencies": {
+  }
+}
