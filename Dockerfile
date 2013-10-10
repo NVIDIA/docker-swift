@@ -17,15 +17,14 @@ RUN	/usr/sbin/useradd -m -d /swift -U swift
 #RUN	mkdir /mnt/sdb1
 
 #RUN	mount /mnt/sdb1
-RUN	mkdir /swift/1 /swift/2 /swift/3 /swift/4
+RUN	mkdir -p /swift/nodes/1 /swift/nodes/2 /swift/nodes/3 /swift/nodes/4
 
-RUN	chown swift:swift /swift/*
+RUN	for x in {1..4}; do ln -s /swift/nodes/$x /srv/$x; done
 
-RUN	for x in {1..4}; do ln -s /swift/$x /srv/$x; done
+RUN	mkdir -p /srv/1/node/sdb1 /srv/2/node/sdb2 /srv/3/node/sdb3 /srv/4/node/sdb4 /var/run/swift
+ADD	./swift /etc/swift
 
-RUN	mkdir -p /etc/swift/object-server /etc/swift/container-server /etc/swift/account-server /srv/1/node/sdb1 /srv/2/node/sdb2 /srv/3/node/sdb3 /srv/4/node/sdb4 /var/run/swift
-
-RUN	chown -R swift:swift /etc/swift /srv/[1-4]/ /var/run/swift  
+RUN	chown -R swift:swift /swift/* /etc/swift /srv/[1-4]/ /var/run/swift  
 
 # Setting up rsync
 
@@ -34,21 +33,31 @@ RUN	sed -i 's/RSYNC_ENABLE=false/RSYNC_ENABLE=true/' /etc/default/rsync
 RUN	grep RSYNC_ENABLE /etc/default/rsync
 RUN	service rsync start
 
-ADD ./swift /etc/
-
 RUN	cd /usr/local/src; git clone https://github.com/openstack/python-swiftclient.git
 RUN	cd /usr/local/src; git clone https://github.com/openstack/swift.git
-RUN	ls -l /usr/local/src
 
 RUN	cd /usr/local/src/python-swiftclient; python setup.py develop; cd -
 RUN	cd /usr/local/src/swift; python setup.py develop; cd -
 RUN	pip install -r /usr/local/src/swift/test-requirements.txt
 
-ADD ./bin /home/swift/
-RUN	ls -l /home/swift
-RUN	ls -l /home/swift/bin
-RUN	chmod +x /home/swift/bin/*
+ADD ./bin /swift/bin
+RUN	chmod +x /swift/bin/*
 
-RUN	ls -l /home/swift/bin
-#EXPOSE  8080
-#CMD ["node", "/src/index.js"]
+RUN	ls -a /swift
+
+ADD	./bashrc /swift/.bashrc
+RUN	chmod u+x /swift/.bashrc; /swift/.bashrc
+
+RUN	/swift/bin/remakerings
+RUN	cp /usr/local/src/swift/test/sample.conf /etc/swift/test.conf
+
+# unittests currently produce one failure
+#RUN	/usr/local/src/swift/.unittests
+
+#RUN	sudo -u swift /swift/bin/startmain
+#RUN	sudo -u swift curl -v -H 'X-Storage-User: test:tester' -H 'X-Storage-Pass: testing' http://127.0.0.1:8080/auth/v1.0
+
+EXPOSE  8080
+CMD ["ps"]
+#CMD ["/usr/bin/sudo -u swift /swift/bin/startmain"]
+
