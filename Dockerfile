@@ -28,7 +28,7 @@ RUN	chown -R swift:swift /swift/* /etc/swift /srv/[1-4]/ /var/run/swift
 
 # Setting up rsync
 
-ADD ./rsyncd.conf /etc/
+ADD ./misc/rsyncd.conf /etc/
 RUN	sed -i 's/RSYNC_ENABLE=false/RSYNC_ENABLE=true/' /etc/default/rsync
 RUN	grep RSYNC_ENABLE /etc/default/rsync
 RUN	service rsync start
@@ -45,7 +45,7 @@ RUN	chmod +x /swift/bin/*
 
 RUN	ls -a /swift
 
-ADD	./bashrc /swift/.bashrc
+ADD	./misc/bashrc /swift/.bashrc
 RUN	chmod u+x /swift/.bashrc; /swift/.bashrc
 
 RUN	/swift/bin/remakerings
