@@ -51,6 +51,9 @@ RUN	chmod u+x /swift/.bashrc; /swift/.bashrc
 RUN	/swift/bin/remakerings
 RUN	cp /usr/local/src/swift/test/sample.conf /etc/swift/test.conf
 
+RUN     cat "sudo su - swift; startmain" > /swift/start.sh
+RUN     chmod +x /swift/start.sh
+
 # unittests currently produce one failure
 #RUN	/usr/local/src/swift/.unittests
 
