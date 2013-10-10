@@ -23,7 +23,8 @@ RUN	chown swift:swift /swift/*
 
 RUN	for x in {1..4}; do ln -s /swift/$x /srv/$x; done
 
-RUN	mkdir -p /etc/swift/object-server /etc/swift/container-server /etc/swift/account-server /srv/1/node/sdb1 /srv/2/node/sdb2 /srv/3/node/sdb3 /srv/4/node/sdb4 /var/run/swift
+RUN	mkdir -p /srv/1/node/sdb1 /srv/2/node/sdb2 /srv/3/node/sdb3 /srv/4/node/sdb4 /var/run/swift
+ADD	./swift /etc/swift
 
 RUN	chown -R swift:swift /etc/swift /srv/[1-4]/ /var/run/swift  
 
@@ -34,21 +35,24 @@ RUN	sed -i 's/RSYNC_ENABLE=false/RSYNC_ENABLE=true/' /etc/default/rsync
 RUN	grep RSYNC_ENABLE /etc/default/rsync
 RUN	service rsync start
 
-ADD ./swift /etc/
-
 RUN	cd /usr/local/src; git clone https://github.com/openstack/python-swiftclient.git
 RUN	cd /usr/local/src; git clone https://github.com/openstack/swift.git
-RUN	ls -l /usr/local/src
 
 RUN	cd /usr/local/src/python-swiftclient; python setup.py develop; cd -
 RUN	cd /usr/local/src/swift; python setup.py develop; cd -
 RUN	pip install -r /usr/local/src/swift/test-requirements.txt
 
-ADD ./bin /home/swift/
-RUN	ls -l /home/swift
-RUN	ls -l /home/swift/bin
+ADD ./bin /home/swift/bin
 RUN	chmod +x /home/swift/bin/*
 
-RUN	ls -l /home/swift/bin
+RUN	ls -a /home/swift
+
+ADD	./bashrc /home/swift/.bashrc
+RUN	chmod u+x /home/swift/.bashrc; /home/swift/.bashrc
+
+RUN	/home/swift/bin/remakerings
+RUN	cp /usr/local/src/swift/test/sample.conf /etc/swift/test.conf
+RUN	/usr/local/src/swift/.unittests
 #EXPOSE  8080
 #CMD ["node", "/src/index.js"]
+
