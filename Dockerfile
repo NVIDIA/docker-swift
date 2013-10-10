@@ -17,16 +17,14 @@ RUN	/usr/sbin/useradd -m -d /swift -U swift
 #RUN	mkdir /mnt/sdb1
 
 #RUN	mount /mnt/sdb1
-RUN	mkdir /swift/1 /swift/2 /swift/3 /swift/4
+RUN	mkdir -p /swift/nodes/1 /swift/nodes/2 /swift/nodes/3 /swift/nodes/4
 
-RUN	chown swift:swift /swift/*
-
-RUN	for x in {1..4}; do ln -s /swift/$x /srv/$x; done
+RUN	for x in {1..4}; do ln -s /swift/nodes/$x /srv/$x; done
 
 RUN	mkdir -p /srv/1/node/sdb1 /srv/2/node/sdb2 /srv/3/node/sdb3 /srv/4/node/sdb4 /var/run/swift
 ADD	./swift /etc/swift
 
-RUN	chown -R swift:swift /etc/swift /srv/[1-4]/ /var/run/swift  
+RUN	chown -R swift:swift /swift/* /etc/swift /srv/[1-4]/ /var/run/swift  
 
 # Setting up rsync
 
@@ -42,17 +40,24 @@ RUN	cd /usr/local/src/python-swiftclient; python setup.py develop; cd -
 RUN	cd /usr/local/src/swift; python setup.py develop; cd -
 RUN	pip install -r /usr/local/src/swift/test-requirements.txt
 
-ADD ./bin /home/swift/bin
-RUN	chmod +x /home/swift/bin/*
+ADD ./bin /swift/bin
+RUN	chmod +x /swift/bin/*
 
-RUN	ls -a /home/swift
+RUN	ls -a /swift
 
-ADD	./bashrc /home/swift/.bashrc
-RUN	chmod u+x /home/swift/.bashrc; /home/swift/.bashrc
+ADD	./bashrc /swift/.bashrc
+RUN	chmod u+x /swift/.bashrc; /swift/.bashrc
 
-RUN	/home/swift/bin/remakerings
+RUN	/swift/bin/remakerings
 RUN	cp /usr/local/src/swift/test/sample.conf /etc/swift/test.conf
-RUN	/usr/local/src/swift/.unittests
-#EXPOSE  8080
-#CMD ["node", "/src/index.js"]
+
+# unittests currently produce one failure
+#RUN	/usr/local/src/swift/.unittests
+
+#RUN	sudo -u swift /swift/bin/startmain
+#RUN	sudo -u swift curl -v -H 'X-Storage-User: test:tester' -H 'X-Storage-Pass: testing' http://127.0.0.1:8080/auth/v1.0
+
+EXPOSE  8080
+CMD ["ps"]
+#CMD ["/usr/bin/sudo -u swift /swift/bin/startmain"]
 
