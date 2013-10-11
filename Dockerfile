@@ -6,7 +6,8 @@ RUN	echo "deb http://archive.ubuntu.com/ubuntu precise universe" >> /etc/apt/sou
 RUN	apt-get update
 RUN	apt-get upgrade -y
 
-RUN	apt-get install -y curl gcc memcached rsync sqlite3 xfsprogs git-core libffi-dev python-setuptools sudo
+
+RUN	apt-get install -y curl gcc memcached rsync sqlite3 xfsprogs git-core libffi-dev python-setuptools sudo rsyslog
 RUN	apt-get install -y python-coverage python-dev python-nose python-simplejson python-xattr python-eventlet python-greenlet python-pastedeploy python-netifaces python-pip python-dnspython python-mock
 
 # create swift user and group
@@ -40,6 +41,8 @@ RUN	chmod +x /swift/bin/*
 ADD	./misc/bashrc /swift/.bashrc
 RUN	chmod u+x /swift/.bashrc; /swift/.bashrc
 
+RUN /swift/bin/remakerings
+
 RUN	cp /usr/local/src/swift/test/sample.conf /etc/swift/test.conf
 
 # unittests currently produce one failure
@@ -47,12 +50,15 @@ RUN	cp /usr/local/src/swift/test/sample.conf /etc/swift/test.conf
 
 RUN	easy_install supervisor
 RUN	mkdir /var/log/supervisor/
-ADD     ./misc/supervisord.conf /etc/supervisord.conf
+ADD ./misc/supervisord.conf /etc/supervisord.conf
 
 RUN	apt-get install -y openssh-server openssh-client
 RUN	mkdir /var/run/sshd
 RUN	echo swift:fingertips | chpasswd
 RUN	usermod -a -G sudo swift
+
+# /dev/null was readonly for other users
+RUN chmod go+w /dev/null
 
 RUN echo %sudo	ALL=NOPASSWD: ALL >> /etc/sudoers
 #RUN	sudo -u swift /swift/bin/startmain
