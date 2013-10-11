@@ -20,8 +20,6 @@ RUN	for x in {1..4}; do ln -s /swift/nodes/$x /srv/$x; done
 RUN	mkdir -p /srv/1/node/sdb1 /srv/2/node/sdb2 /srv/3/node/sdb3 /srv/4/node/sdb4 /var/run/swift
 ADD	./swift /etc/swift
 
-RUN	chown -R swift:swift /swift/* /etc/swift /srv/[1-4]/ /var/run/swift  
-
 # Setting up rsync
 
 ADD ./misc/rsyncd.conf /etc/
@@ -41,6 +39,8 @@ ADD	./misc/bashrc /swift/.bashrc
 RUN	chmod u+x /swift/.bashrc; /swift/.bashrc
 
 RUN	cp /usr/local/src/swift/test/sample.conf /etc/swift/test.conf
+
+RUN     chown -R swift:swift /swift/* /etc/swift /srv/[1-4]/ /var/run/swift
 
 # unittests currently produce one failure
 #RUN	/usr/local/src/swift/.unittests
