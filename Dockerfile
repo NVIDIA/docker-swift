@@ -52,7 +52,9 @@ ADD     ./misc/supervisord.conf /etc/supervisord.conf
 RUN	apt-get install -y openssh-server openssh-client
 RUN	mkdir /var/run/sshd
 RUN	echo swift:fingertips | chpasswd
+RUN	usermod -a -G sudo swift
 
+RUN echo %sudo	ALL=NOPASSWD: ALL >> /etc/sudoers
 #RUN	sudo -u swift /swift/bin/startmain
 #RUN	sudo -u swift curl -v -H 'X-Storage-User: test:tester' -H 'X-Storage-Pass: testing' http://127.0.0.1:8080/auth/v1.0
 
