@@ -3,11 +3,10 @@ FROM   ubuntu:12.04
 
 RUN	echo "deb http://archive.ubuntu.com/ubuntu precise universe" >> /etc/apt/sources.list
 
-RUN	apt-get update
-RUN	apt-get upgrade -y
+RUN	apt-get update; apt-get upgrade -y
 
-RUN	apt-get install -y curl gcc memcached rsync sqlite3 xfsprogs git-core libffi-dev python-setuptools sudo
-RUN	apt-get install -y python-coverage python-dev python-nose python-simplejson python-xattr python-eventlet python-greenlet python-pastedeploy python-netifaces python-pip python-dnspython python-mock
+RUN	apt-get install -y curl gcc memcached rsync sqlite3 xfsprogs git-core libffi-dev python-setuptools sudo rsyslog
+RUN	apt-get install -y python-coverage python-dev python-nose python-simplejson python-xattr python-eventlet python-greenlet python-pastedeploy python-netifaces python-pip python-dnspython python-mock sysklogd
 
 # create swift user and group
 RUN	/usr/sbin/useradd -m -d /swift -U swift
@@ -42,17 +41,22 @@ RUN	cp /usr/local/src/swift/test/sample.conf /etc/swift/test.conf
 
 RUN     chown -R swift:swift /swift/* /etc/swift /srv/[1-4]/ /var/run/swift
 
+
+ADD	./rsyslog.d/10-swift.conf /etc/rsyslog.d/10-swift.conf
+RUN	sed -i 's/\$PrivDropToGroup syslog/\$PrivDropToGroup adm/' /etc/rsyslog.conf
+RUN	mkdir -p /var/log/swift/hourly
+RUN	chown -R syslog.adm /var/log/swift
+RUN	chmod -R g+w /var/log/swift
+
+
 # unittests currently produce one failure
 #RUN	/usr/local/src/swift/.unittests
 
-RUN	easy_install supervisor
-RUN	mkdir /var/log/supervisor/
+RUN	easy_install supervisor; mkdir /var/log/supervisor/
 ADD     ./misc/supervisord.conf /etc/supervisord.conf
 
-RUN	apt-get install -y openssh-server openssh-client
-RUN	mkdir /var/run/sshd
-RUN	echo swift:fingertips | chpasswd
-RUN	usermod -a -G sudo swift
+RUN	apt-get install -y openssh-server openssh-client; mkdir /var/run/sshd
+RUN	echo swift:fingertips | chpasswd; usermod -a -G sudo swift
 
 RUN echo %sudo	ALL=NOPASSWD: ALL >> /etc/sudoers
 #RUN	sudo -u swift /swift/bin/startmain
