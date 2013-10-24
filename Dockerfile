@@ -3,10 +3,13 @@ FROM   ubuntu:12.04
 
 RUN	echo "deb http://archive.ubuntu.com/ubuntu precise universe" >> /etc/apt/sources.list
 
+# workaround for Ubuntu dependency on upstart https://github.com/dotcloud/docker/issues/1024
+RUN	dpkg-divert --local --rename --add /sbin/initctl; ln -s /bin/true /sbin/initctl
+
 RUN	apt-get update; apt-get upgrade -y
 
 RUN	apt-get install -y curl gcc memcached rsync sqlite3 xfsprogs git-core libffi-dev python-setuptools sudo rsyslog
-RUN	apt-get install -y python-coverage python-dev python-nose python-simplejson python-xattr python-eventlet python-greenlet python-pastedeploy python-netifaces python-pip python-dnspython python-mock sysklogd
+RUN	apt-get install -y python-coverage python-dev python-nose python-simplejson python-xattr python-eventlet python-greenlet python-pastedeploy python-netifaces python-pip python-dnspython python-mock sysklogd 
 
 # create swift user and group
 RUN	/usr/sbin/useradd -m -d /swift -U swift
