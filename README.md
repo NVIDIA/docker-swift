@@ -12,10 +12,15 @@ It is not yet complete.
 ```
 docker build -t pbinkley/docker-swift .
 docker run -i -t pbinkley/docker-swift /bin/bash
-curl -v -H 'X-Storage-User: test:tester' -H 'X-Storage-Pass: testing' http://127.0.0.1:8080/auth/v1.0
+curl -v -H 'X-Storage-User: test:tester' -H 'X-Storage-Pass: testing' http://127.0.0.1:<port>/auth/v1.0
+curl -v -H 'X-Auth-Token: <token-from-x-auth-token-above>' <url-from-x-storage-url-above>
+swift -A http://127.0.0.1:<port>/auth/v1.0 -U test:tester -K testing stat
 ```
 
-Just need to figure out CMD and ENTRYPOINT to start Swift automatically, and then how to expose the ports outside the running image.
+Uses supervisord to keep the image running. You can ssh in: use sshswift.sh script, give it your password 
+when sudo asks for it, then log in as swift with password 'fingertips'.
+
+Tail /var/log/syslog to see what it's doing.
 
 ##Notes on changes
 
