@@ -11,9 +11,6 @@ RUN	apt-get update; apt-get upgrade -y
 RUN	apt-get install -y curl gcc memcached rsync sqlite3 xfsprogs git-core libffi-dev python-setuptools sudo rsyslog
 RUN	apt-get install -y python-coverage python-dev python-nose python-simplejson python-xattr python-eventlet python-greenlet python-pastedeploy python-netifaces python-pip python-dnspython python-mock sysklogd 
 
-# add fstab
-ADD	./misc/fstab /etc/fstab
-
 # create swift user and group
 RUN	/usr/sbin/useradd -m -d /swift -U swift
 
@@ -50,13 +47,7 @@ RUN     chown -R swift:swift /swift/* /etc/swift /srv/[1-4]/ /var/run/swift
 
 ADD	./rsyslog.d/10-swift.conf /etc/rsyslog.d/10-swift.conf
 RUN	sed -i 's/\$PrivDropToGroup syslog/\$PrivDropToGroup adm/' /etc/rsyslog.conf
-RUN	mkdir -p /var/log/swift/hourly
-RUN	chown -R syslog.adm /var/log/swift
-RUN	chmod -R g+w /var/log/swift
-
-
-# unittests currently produce one failure
-#RUN	/usr/local/src/swift/.unittests
+RUN	mkdir -p /var/log/swift/hourly; chown -R syslog.adm /var/log/swift; chmod -R g+w /var/log/swift
 
 RUN	easy_install supervisor; mkdir /var/log/supervisor/
 ADD     ./misc/supervisord.conf /etc/supervisord.conf
@@ -65,8 +56,10 @@ RUN	apt-get install -y openssh-server openssh-client; mkdir /var/run/sshd
 RUN	echo swift:fingertips | chpasswd; usermod -a -G sudo swift
 
 RUN echo %sudo	ALL=NOPASSWD: ALL >> /etc/sudoers
-#RUN	sudo -u swift /swift/bin/startmain
-#RUN	sudo -u swift curl -v -H 'X-Storage-User: test:tester' -H 'X-Storage-Pass: testing' http://127.0.0.1:8080/auth/v1.0
+
+# prepare for data volume
+RUN	mv /swift/nodes /swift/nodes-template
+VOLUME	/swift/nodes
 
 EXPOSE 8080
 EXPOSE 22

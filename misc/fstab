@@ -1,4 +1,0 @@
-proc /proc proc defaults 0 0
-/dev/sda1 / ext3 defaults,errors=remount-ro,user_xattr 0 1
-/dev/sda2 none swap sw 0 0
-
