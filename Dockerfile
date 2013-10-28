@@ -8,18 +8,12 @@ RUN	dpkg-divert --local --rename --add /sbin/initctl; ln -s /bin/true /sbin/init
 
 RUN	apt-get update; apt-get upgrade -y
 
-RUN	apt-get install -y curl gcc memcached rsync sqlite3 xfsprogs git-core libffi-dev python-setuptools sudo rsyslog
-RUN	apt-get install -y python-coverage python-dev python-nose python-simplejson python-xattr python-eventlet python-greenlet python-pastedeploy python-netifaces python-pip python-dnspython python-mock sysklogd 
+RUN	apt-get install -y rsyslog; apt-get install -y curl gcc memcached rsync sqlite3 xfsprogs git-core libffi-dev python-setuptools sudo python-coverage python-dev python-nose python-simplejson python-xattr python-eventlet python-greenlet python-pastedeploy python-netifaces python-pip python-dnspython python-mock sysklogd attr openssh-server openssh-client
 
 # create swift user and group
 RUN	/usr/sbin/useradd -m -d /swift -U swift
 
-# set up storage
-RUN	mkdir -p /swift/nodes/1 /swift/nodes/2 /swift/nodes/3 /swift/nodes/4
 
-RUN	for x in {1..4}; do ln -s /swift/nodes/$x /srv/$x; done
-
-RUN	mkdir -p /srv/1/node/sdb1 /srv/2/node/sdb2 /srv/3/node/sdb3 /srv/4/node/sdb4 /var/run/swift
 ADD	./swift /etc/swift
 
 # Setting up rsync
@@ -42,9 +36,6 @@ RUN	chmod u+x /swift/.bashrc; /swift/.bashrc
 
 RUN	cp /usr/local/src/swift/test/sample.conf /etc/swift/test.conf
 
-RUN     chown -R swift:swift /swift/* /etc/swift /srv/[1-4]/ /var/run/swift
-
-
 ADD	./rsyslog.d/10-swift.conf /etc/rsyslog.d/10-swift.conf
 RUN	sed -i 's/\$PrivDropToGroup syslog/\$PrivDropToGroup adm/' /etc/rsyslog.conf
 RUN	mkdir -p /var/log/swift/hourly; chown -R syslog.adm /var/log/swift; chmod -R g+w /var/log/swift
@@ -52,13 +43,11 @@ RUN	mkdir -p /var/log/swift/hourly; chown -R syslog.adm /var/log/swift; chmod -R
 RUN	easy_install supervisor; mkdir /var/log/supervisor/
 ADD     ./misc/supervisord.conf /etc/supervisord.conf
 
-RUN	apt-get install -y openssh-server openssh-client; mkdir /var/run/sshd
+RUN	mkdir /var/run/sshd
 RUN	echo swift:fingertips | chpasswd; usermod -a -G sudo swift
 
 RUN echo %sudo	ALL=NOPASSWD: ALL >> /etc/sudoers
 
-# prepare for data volume
-RUN	mv /swift/nodes /swift/nodes-template
 VOLUME	/swift/nodes
 
 EXPOSE 8080
