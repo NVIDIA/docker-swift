@@ -12,7 +12,7 @@ Swift requires xattr to be enabled. This isn't supported by the AUFS filesystem,
 This demo stores the data in a directory at "/path/to/data".
 ```
 docker build -t pbinkley/docker-swift .
-sudo docker run -v /path/to/data:/swift/nodes -t pbinkley/docker-swift
+sudo docker run -P -v /path/to/data:/swift/nodes -t pbinkley/docker-swift
 curl -v -H 'X-Storage-User: test:tester' -H 'X-Storage-Pass: testing' http://127.0.0.1:<port>/auth/v1.0
 curl -v -H 'X-Auth-Token: <token-from-x-auth-token-above>' <url-from-x-storage-url-above>
 swift -A http://127.0.0.1:<port>/auth/v1.0 -U test:tester -K testing stat
