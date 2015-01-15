@@ -8,13 +8,15 @@ RUN	dpkg-divert --local --rename --add /sbin/initctl; ln -sf /bin/true /sbin/ini
 
 RUN	apt-get update; apt-get upgrade -y
 
-RUN	apt-get install -y rsyslog; apt-get install -y curl gcc memcached rsync sqlite3 xfsprogs git-core libffi-dev python-setuptools sudo python-coverage python-dev python-nose python-simplejson python-xattr python-eventlet python-greenlet python-pastedeploy python-netifaces python-pip python-dnspython python-mock sysklogd attr openssh-server openssh-client
+RUN	apt-get install -y rsyslog; apt-get install -y curl gcc memcached rsync sqlite3 xfsprogs git-core libffi-dev python-setuptools sudo python-coverage python-dev python-nose python-simplejson python-xattr python-eventlet python-greenlet python-pastedeploy python-netifaces python-pip python-dnspython python-mock sysklogd attr openssh-server openssh-client \
+    python-lxml
 
 RUN	cd /usr/local/src; git clone --depth 1 https://github.com/openstack/python-swiftclient.git
 RUN	cd /usr/local/src; git clone --depth 1 https://github.com/openstack/swift.git
 
 RUN	cd /usr/local/src/python-swiftclient; git checkout tags/2.3.1 && python setup.py develop; cd -
 RUN	cd /usr/local/src/swift; git checkout tags/2.2.2 && python setup.py develop; cd -
+RUN	cd /usr/local/src/swift3; python setup.py develop; cd -
 RUN	pip install -r /usr/local/src/swift/test-requirements.txt
 
 RUN	easy_install supervisor; mkdir /var/log/supervisor/
