@@ -32,7 +32,6 @@ ADD ./bin /swift/bin
 RUN	chmod +x /swift/bin/*
 
 ADD	./misc/bashrc /swift/.bashrc
-RUN	chmod u+x /swift/.bashrc; /swift/.bashrc
 
 RUN	cp /usr/local/src/swift/test/sample.conf /etc/swift/test.conf
 
