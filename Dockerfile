@@ -4,7 +4,7 @@ FROM   ubuntu:12.04
 RUN	echo "deb http://archive.ubuntu.com/ubuntu precise universe" >> /etc/apt/sources.list
 
 # workaround for Ubuntu dependency on upstart https://github.com/dotcloud/docker/issues/1024
-RUN	dpkg-divert --local --rename --add /sbin/initctl; ln -s /bin/true /sbin/initctl
+RUN	dpkg-divert --local --rename --add /sbin/initctl; ln -sf /bin/true /sbin/initctl
 
 RUN	apt-get update; apt-get upgrade -y
 
@@ -21,11 +21,11 @@ ADD	./swift /etc/swift
 ADD ./misc/rsyncd.conf /etc/
 RUN	sed -i 's/RSYNC_ENABLE=false/RSYNC_ENABLE=true/' /etc/default/rsync
 
-RUN	cd /usr/local/src; git clone https://github.com/openstack/python-swiftclient.git
-RUN	cd /usr/local/src; git clone https://github.com/openstack/swift.git
+RUN	cd /usr/local/src; git clone --depth 1 https://github.com/openstack/python-swiftclient.git
+RUN	cd /usr/local/src; git clone --depth 1 https://github.com/openstack/swift.git
 
-RUN	cd /usr/local/src/python-swiftclient; python setup.py develop; cd -
-RUN	cd /usr/local/src/swift; python setup.py develop; cd -
+RUN	cd /usr/local/src/python-swiftclient; git checkout tags/2.3.1 && python setup.py develop; cd -
+RUN	cd /usr/local/src/swift; git checkout tags/2.2.2 && python setup.py develop; cd -
 RUN	pip install -r /usr/local/src/swift/test-requirements.txt
 
 ADD ./bin /swift/bin
