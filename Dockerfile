@@ -28,6 +28,8 @@ RUN	cd /usr/local/src/python-swiftclient; git checkout tags/2.3.1 && python setu
 RUN	cd /usr/local/src/swift; git checkout tags/2.2.2 && python setup.py develop; cd -
 RUN	pip install -r /usr/local/src/swift/test-requirements.txt
 
+RUN     sed -i 's/SLEEP_BETWEEN_AUDITS = 30/SLEEP_BETWEEN_AUDITS = 86400/' /usr/local/src/swift/swift/obj/auditor.py
+
 ADD ./bin /swift/bin
 RUN	chmod +x /swift/bin/*
 
