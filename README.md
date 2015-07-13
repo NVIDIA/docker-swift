@@ -77,3 +77,9 @@ Tail /var/log/syslog to see what it's doing.
 - user and group ids are swift:swift
 - the instructions provide for using a separate partition or a loopback for storage, presumably to allow the storage capacity to be strictly limted. Neither of these was easy for a Docker n00b to implement, so I've just used /swift, with symbolic links in /srv. The storage can be limited at the OS level in the Docker image if it's a concern.
 - the Github sources are cloned to /usr/local/src
+
+## License
+
+Copyright (C) 2013-2015 Peter Binkley @pbinkley
+
+Licensed under the GNU General Public License, Version 2.0
