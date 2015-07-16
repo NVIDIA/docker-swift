@@ -15,6 +15,7 @@ RUN	cd /usr/local/src; git clone --depth 1 https://github.com/openstack/python-s
 RUN	cd /usr/local/src; git clone --depth 1 https://github.com/openstack/swift.git
 RUN	cd /usr/local/src; git clone --depth 1 https://github.com/stackforge/swift3.git
 
+RUN pip install --upgrade pip
 RUN	cd /usr/local/src/python-swiftclient; git checkout tags/2.3.1 && python setup.py develop; cd -
 RUN	cd /usr/local/src/swift; git checkout tags/2.2.2 && python setup.py develop; cd -
 RUN	cd /usr/local/src/swift3; python setup.py develop; cd -
