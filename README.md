@@ -5,7 +5,7 @@ docker-swift
 
 Docker image for Swift all-in-one demo deployment
 
-This is an attempt to dockerize the instructions for a [Swift All-in-one deployment](http://docs.openstack.org/developer/swift/development_saio.html). 
+This is an attempt to dockerize the instructions for a [Swift All-in-one deployment](http://docs.openstack.org/developer/swift/development_saio.html).
 
 Swift requires xattr to be enabled. This isn't supported by the AUFS filesystem, so it isn't possible for Swift to use storage within the Docker image. The workaround for this is to mount a Docker data volume from a filesystem where xattr is enabled. Storing Swift's data in a mounted volume has the further advantage that the data is persistent.
 
@@ -13,8 +13,8 @@ Swift requires xattr to be enabled. This isn't supported by the AUFS filesystem,
 
 This demo stores the data in a directory at "/path/to/data".
 ```
-docker build -t pbinkley/docker-swift .
-sudo docker run -P -v /path/to/data:/swift/nodes -t pbinkley/docker-swift
+docker build -t kahing/docker-swift .
+sudo docker run -P -v /path/to/data:/swift/nodes -t kahing/docker-swift
 curl -v -H 'X-Storage-User: test:tester' -H 'X-Storage-Pass: testing' http://127.0.0.1:<port>/auth/v1.0
 curl -v -H 'X-Auth-Token: <token-from-x-auth-token-above>' <url-from-x-storage-url-above>
 swift -A http://127.0.0.1:<port>/auth/v1.0 -U test:tester -K testing stat
@@ -24,7 +24,7 @@ Discover the port by running "sudo docker ps", which will give output like this:
 
 ```
 ID                  IMAGE                          COMMAND               CREATED             STATUS              PORTS
-159caa6f384b        pbinkley/docker-swift:latest   /bin/bash /swift/bin   9 minutes ago       Up 9 minutes        49175->22, 49176->8080   
+159caa6f384b        kahing/docker-swift:latest     /bin/bash /swift/bin   9 minutes ago       Up 9 minutes        49175->22, 49176->8080
 ```
 
 You want the port that is mapped to port 8080 within the Docker image, in this case 49176.
@@ -46,7 +46,7 @@ Result:
 > Accept: */*
 > X-Storage-User: test:tester
 > X-Storage-Pass: testing
-> 
+>
 < HTTP/1.1 200 OK
 < X-Storage-Url: http://127.0.0.1:8080/v1/AUTH_test
 < X-Auth-Token: AUTH_tk246b80e9b72a42e68a76e0ff2aaaf051
@@ -54,7 +54,7 @@ Result:
 < X-Storage-Token: AUTH_tk246b80e9b72a42e68a76e0ff2aaaf051
 < Content-Length: 0
 < Date: Mon, 28 Oct 2013 22:48:51 GMT
-< 
+<
 * Connection #0 to host 127.0.0.1 left intact
 * Closing connection #0
 ```
