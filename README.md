@@ -1,7 +1,7 @@
 docker-swift
 ============
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/kahing/docker-swift.svg)](https://hub.docker.com/r/kahing/docker-swift/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/bouncestorage/swift-aio.svg)](https://hub.docker.com/r/bouncestorage/swift-aio/)
 
 Docker image for Swift all-in-one demo deployment
 
@@ -13,8 +13,8 @@ Swift requires xattr to be enabled. This isn't supported by the AUFS filesystem,
 
 This demo stores the data in a directory at "/path/to/data".
 ```
-docker build -t kahing/docker-swift .
-sudo docker run -P -v /path/to/data:/swift/nodes -t kahing/docker-swift
+docker build -t bouncestorage/swift-aio .
+sudo docker run -P -v /path/to/data:/swift/nodes -t bouncestorage/swift-aio
 curl -v -H 'X-Storage-User: test:tester' -H 'X-Storage-Pass: testing' http://127.0.0.1:<port>/auth/v1.0
 curl -v -H 'X-Auth-Token: <token-from-x-auth-token-above>' <url-from-x-storage-url-above>
 swift -A http://127.0.0.1:<port>/auth/v1.0 -U test:tester -K testing stat
@@ -24,7 +24,7 @@ Discover the port by running "sudo docker ps", which will give output like this:
 
 ```
 ID                  IMAGE                          COMMAND               CREATED             STATUS              PORTS
-159caa6f384b        kahing/docker-swift:latest     /bin/bash /swift/bin   9 minutes ago       Up 9 minutes        49175->22, 49176->8080
+159caa6f384b        bouncestorage/swift-aio:latest /bin/bash /swift/bin   9 minutes ago       Up 9 minutes        49175->22, 49176->8080
 ```
 
 You want the port that is mapped to port 8080 within the Docker image, in this case 49176.
