@@ -1,5 +1,5 @@
 #!/bin/sh
-/etc/init.d/sysklogd start
+/usr/sbin/service rsyslog start
 /usr/sbin/service rsync start
 /usr/sbin/service memcached start
 # set up storage
