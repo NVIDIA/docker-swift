@@ -1,23 +1,35 @@
 # DOCKER-VERSION 0.6.4
-FROM   ubuntu:12.04
+FROM	ubuntu:14.04
 
-RUN	echo "deb http://archive.ubuntu.com/ubuntu precise universe" >> /etc/apt/sources.list
+RUN	echo "deb http://archive.ubuntu.com/ubuntu trusty-backports universe" >> /etc/apt/sources.list
 
 # workaround for Ubuntu dependency on upstart https://github.com/dotcloud/docker/issues/1024
 RUN	dpkg-divert --local --rename --add /sbin/initctl; ln -sf /bin/true /sbin/initctl
 
 RUN	DEBIAN_FRONTEND=noninteractive apt-get update; DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
 
-RUN	DEBIAN_FRONTEND=noninteractive apt-get install -y rsyslog; DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils net-tools curl gcc memcached rsync sqlite3 xfsprogs git-core libffi-dev python-setuptools sudo python-coverage python-dev python-nose python-simplejson python-xattr python-eventlet python-greenlet python-pastedeploy python-netifaces python-pip python-dnspython python-mock sysklogd attr openssh-server openssh-client \
-    python-lxml
+RUN	DEBIAN_FRONTEND=noninteractive apt-get install -y rsyslog
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils net-tools curl \
+gcc memcached rsync sqlite3 xfsprogs git-core libffi-dev python-setuptools \
+sudo python-coverage python-dev python-nose python-simplejson python-xattr \
+python-eventlet python-greenlet python-pastedeploy python-netifaces python-pip \
+python-dnspython python-mock attr openssh-server openssh-client python-lxml \
+libssl-dev libyaml-dev wget
 
-RUN	cd /usr/local/src; git clone --depth 1 https://github.com/openstack/python-swiftclient.git
-RUN	cd /usr/local/src; git clone --depth 1 https://github.com/openstack/swift.git
-RUN	cd /usr/local/src; git clone --depth 1 https://github.com/stackforge/swift3.git
+RUN	wget http://mirrors.kernel.org/ubuntu/pool/main/libe/liberasurecode/liberasurecode1_1.4.0-2_amd64.deb
+RUN	wget http://mirrors.kernel.org/ubuntu/pool/main/libe/liberasurecode/liberasurecode-dev_1.4.0-2_amd64.deb
+RUN	dpkg -i liberasurecode-dev_1.4.0-2_amd64.deb liberasurecode1_1.4.0-2_amd64.deb
+
+RUN	cd /usr/local/src; git clone --branch 3.3.0 --single-branch --depth 1 https://github.com/openstack/python-swiftclient.git
+RUN	cd /usr/local/src; git clone --branch 2.14.0 --single-branch --depth 1 https://github.com/openstack/swift.git
+RUN	cd /usr/local/src; git clone --branch 1.11 --single-branch --depth 1 https://github.com/openstack/swift3.git
 
 RUN pip install --upgrade pip
-RUN	cd /usr/local/src/python-swiftclient; git checkout tags/2.3.1 && python setup.py develop; cd -
-RUN	cd /usr/local/src/swift; git checkout tags/2.2.2 && python setup.py develop; cd -
+RUN	pip install --upgrade setuptools
+# work around a missing dependency
+RUN	pip install pytz
+RUN	cd /usr/local/src/python-swiftclient; python setup.py develop; cd -
+RUN	cd /usr/local/src/swift; python setup.py develop; cd -
 RUN	cd /usr/local/src/swift3; python setup.py develop; cd -
 RUN	pip install -r /usr/local/src/swift/test-requirements.txt
 
