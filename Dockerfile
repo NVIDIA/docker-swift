@@ -46,17 +46,26 @@ RUN	wget http://mirrors.kernel.org/ubuntu/pool/main/libe/liberasurecode/liberasu
 RUN	wget http://mirrors.kernel.org/ubuntu/pool/main/libe/liberasurecode/liberasurecode-dev_1.4.0-2_amd64.deb
 RUN	dpkg -i liberasurecode-dev_1.4.0-2_amd64.deb liberasurecode1_1.4.0-2_amd64.deb
 
-RUN	cd /usr/local/src; git clone --branch 3.3.0 --single-branch --depth 1 https://github.com/openstack/python-swiftclient.git
-RUN	cd /usr/local/src; git clone --branch 2.14.0 --single-branch --depth 1 https://github.com/openstack/swift.git
-RUN	cd /usr/local/src; git clone --branch 1.11 --single-branch --depth 1 https://github.com/openstack/swift3.git
+RUN pip install --upgrade \
+    pip \
+    setuptools
 
-RUN pip install --upgrade pip
-RUN	pip install --upgrade setuptools
 # work around a missing dependency
 RUN	pip install pytz
-RUN	cd /usr/local/src/python-swiftclient; python setup.py develop; cd -
-RUN	cd /usr/local/src/swift; python setup.py develop; cd -
-RUN	cd /usr/local/src/swift3; python setup.py develop; cd -
+
+RUN git clone --branch 3.3.0 --single-branch --depth 1 https://github.com/openstack/python-swiftclient.git /usr/local/src/python-swiftclient && \
+    cd /usr/local/src/python-swiftclient && \
+    python setup.py develop && \
+    cd -
+RUN git clone --branch 2.14.0 --single-branch --depth 1 https://github.com/openstack/swift.git /usr/local/src/swift && \
+    cd /usr/local/src/swift && \
+    python setup.py develop && \
+    cd -
+RUN git clone --branch 1.11 --single-branch --depth 1 https://github.com/openstack/swift3.git /usr/local/src/swift3 && \
+    cd /usr/local/src/swift3 && \
+    python setup.py develop && \
+    cd -
+
 RUN	pip install -r /usr/local/src/swift/test-requirements.txt
 
 RUN	easy_install supervisor; mkdir /var/log/supervisor/
