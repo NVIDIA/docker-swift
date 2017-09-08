@@ -2,6 +2,7 @@ docker-swift
 ============
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/bouncestorage/swift-aio.svg)](https://hub.docker.com/r/bouncestorage/swift-aio/)
+[![](https://images.microbadger.com/badges/image/bouncestorage/swift-aio.svg)](https://microbadger.com/images/bouncestorage/swift-aio)
 
 Docker image for Swift all-in-one demo deployment
 
