@@ -11,7 +11,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         apt-utils \
         attr \
-        curl \
         gcc \
         git-core \
         libffi-dev \
@@ -19,8 +18,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
         libyaml-dev \
         memcached \
         net-tools \
-        openssh-client \
-        openssh-server \
         python-coverage \
         python-dev \
         python-dnspython \
@@ -97,7 +94,6 @@ RUN	mkdir -p /var/log/swift/hourly; chown -R syslog.adm /var/log/swift; chmod -R
 
 ADD     ./misc/supervisord.conf /etc/supervisord.conf
 
-RUN	mkdir /var/run/sshd
 RUN	echo swift:fingertips | chpasswd; usermod -a -G sudo swift
 
 RUN echo %sudo	ALL=NOPASSWD: ALL >> /etc/sudoers
@@ -105,6 +101,4 @@ RUN echo %sudo	ALL=NOPASSWD: ALL >> /etc/sudoers
 VOLUME	/swift/nodes
 
 EXPOSE 8080
-EXPOSE 22
 CMD ["/bin/bash", "/swift/bin/launch.sh"]
-
