@@ -6,15 +6,41 @@ RUN	echo "deb http://archive.ubuntu.com/ubuntu trusty-backports universe" >> /et
 # workaround for Ubuntu dependency on upstart https://github.com/dotcloud/docker/issues/1024
 RUN	dpkg-divert --local --rename --add /sbin/initctl; ln -sf /bin/true /sbin/initctl
 
-RUN	DEBIAN_FRONTEND=noninteractive apt-get update; DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
-
-RUN	DEBIAN_FRONTEND=noninteractive apt-get install -y rsyslog
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils net-tools curl \
-gcc memcached rsync sqlite3 xfsprogs git-core libffi-dev python-setuptools \
-sudo python-coverage python-dev python-nose python-simplejson python-xattr \
-python-eventlet python-greenlet python-pastedeploy python-netifaces python-pip \
-python-dnspython python-mock attr openssh-server openssh-client python-lxml \
-libssl-dev libyaml-dev wget
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        apt-utils \
+        attr \
+        curl \
+        gcc \
+        git-core \
+        libffi-dev \
+        libssl-dev \
+        libyaml-dev \
+        memcached \
+        net-tools \
+        openssh-client \
+        openssh-server \
+        python-coverage \
+        python-dev \
+        python-dnspython \
+        python-eventlet \
+        python-greenlet \
+        python-lxml \
+        python-mock \
+        python-netifaces \
+        python-nose \
+        python-pastedeploy \
+        python-pip \
+        python-setuptools \
+        python-simplejson \
+        python-xattr \
+        rsyslog \
+        rsync \
+        sqlite3 \
+        sudo \
+        wget \
+        xfsprogs
 
 RUN	wget http://mirrors.kernel.org/ubuntu/pool/main/libe/liberasurecode/liberasurecode1_1.4.0-2_amd64.deb
 RUN	wget http://mirrors.kernel.org/ubuntu/pool/main/libe/liberasurecode/liberasurecode-dev_1.4.0-2_amd64.deb
