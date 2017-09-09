@@ -8,7 +8,7 @@ RUN	dpkg-divert --local --rename --add /sbin/initctl; ln -sf /bin/true /sbin/ini
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         apt-utils \
         attr \
         curl \
@@ -39,7 +39,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
         rsync \
         sqlite3 \
         sudo \
-        xfsprogs
+        xfsprogs && \
+    DEBIAN_FRONTEND=noninteractive apt-get clean
 
 ADD http://mirrors.kernel.org/ubuntu/pool/main/libe/liberasurecode/liberasurecode1_1.4.0-2_amd64.deb \
     http://mirrors.kernel.org/ubuntu/pool/main/libe/liberasurecode/liberasurecode-dev_1.4.0-2_amd64.deb \
