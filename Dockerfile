@@ -72,27 +72,27 @@ RUN	easy_install supervisor; mkdir /var/log/supervisor/
 RUN	/usr/sbin/useradd -m -d /swift -U swift
 
 
-ADD	./swift /etc/swift
+COPY ./swift /etc/swift
 
 # Setting up rsync
 
-ADD ./misc/rsyncd.conf /etc/
+COPY ./misc/rsyncd.conf /etc/
 RUN	sed -i 's/RSYNC_ENABLE=false/RSYNC_ENABLE=true/' /etc/default/rsync
 
 RUN     sed -i 's/SLEEP_BETWEEN_AUDITS = 30/SLEEP_BETWEEN_AUDITS = 86400/' /usr/local/src/swift/swift/obj/auditor.py
 
-ADD ./bin /swift/bin
+COPY ./bin /swift/bin
 RUN	chmod +x /swift/bin/*
 
-ADD	./misc/bashrc /swift/.bashrc
+COPY ./misc/bashrc /swift/.bashrc
 
 RUN	cp /usr/local/src/swift/test/sample.conf /etc/swift/test.conf
 
-ADD	./rsyslog.d/10-swift.conf /etc/rsyslog.d/10-swift.conf
+COPY ./rsyslog.d/10-swift.conf /etc/rsyslog.d/10-swift.conf
 RUN	sed -i 's/\$PrivDropToGroup syslog/\$PrivDropToGroup adm/' /etc/rsyslog.conf
 RUN	mkdir -p /var/log/swift/hourly; chown -R syslog.adm /var/log/swift; chmod -R g+w /var/log/swift
 
-ADD     ./misc/supervisord.conf /etc/supervisord.conf
+COPY ./misc/supervisord.conf /etc/supervisord.conf
 
 RUN	echo swift:fingertips | chpasswd; usermod -a -G sudo swift
 
