@@ -37,7 +37,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
         sqlite3 \
         sudo \
         xfsprogs && \
-    DEBIAN_FRONTEND=noninteractive apt-get clean
+    DEBIAN_FRONTEND=noninteractive apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ADD http://mirrors.kernel.org/ubuntu/pool/main/libe/liberasurecode/liberasurecode1_1.4.0-2_amd64.deb \
     http://mirrors.kernel.org/ubuntu/pool/main/libe/liberasurecode/liberasurecode-dev_1.4.0-2_amd64.deb \
