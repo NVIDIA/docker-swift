@@ -56,7 +56,7 @@ RUN git clone --branch 3.3.0 --single-branch --depth 1 https://github.com/openst
     cd /usr/local/src/python-swiftclient && \
     python setup.py develop && \
     cd -
-RUN git clone --branch 2.14.0 --single-branch --depth 1 https://github.com/openstack/swift.git /usr/local/src/swift && \
+RUN git clone --branch 2.15.1 --single-branch --depth 1 https://github.com/openstack/swift.git /usr/local/src/swift && \
     cd /usr/local/src/swift && \
     python setup.py develop && \
     cd -
