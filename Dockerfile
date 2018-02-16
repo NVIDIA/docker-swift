@@ -43,7 +43,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 ADD http://mirrors.kernel.org/ubuntu/pool/main/libe/liberasurecode/liberasurecode1_1.4.0-2_amd64.deb \
     http://mirrors.kernel.org/ubuntu/pool/main/libe/liberasurecode/liberasurecode-dev_1.4.0-2_amd64.deb \
     /
-RUN	dpkg -i liberasurecode-dev_1.4.0-2_amd64.deb liberasurecode1_1.4.0-2_amd64.deb
+RUN	dpkg -i liberasurecode-dev_1.4.0-2_amd64.deb \
+            liberasurecode1_1.4.0-2_amd64.deb \
+    && rm liberasurecode-dev_1.4.0-2_amd64.deb liberasurecode1_1.4.0-2_amd64.deb
 
 RUN pip install --upgrade \
     pip \
