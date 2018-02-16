@@ -54,15 +54,15 @@ RUN pip install --upgrade \
 # work around a missing dependency
 RUN	pip install pytz
 
-RUN git clone --branch 3.3.0 --single-branch --depth 1 https://github.com/openstack/python-swiftclient.git /usr/local/src/python-swiftclient && \
+RUN git clone --branch 3.5.0 --single-branch --depth 1 https://github.com/openstack/python-swiftclient.git /usr/local/src/python-swiftclient && \
     cd /usr/local/src/python-swiftclient && \
     python setup.py develop && \
     cd -
-RUN git clone --branch 2.15.1 --single-branch --depth 1 https://github.com/openstack/swift.git /usr/local/src/swift && \
+RUN git clone --branch 2.17.0 --single-branch --depth 1 https://github.com/openstack/swift.git /usr/local/src/swift && \
     cd /usr/local/src/swift && \
     python setup.py develop && \
     cd -
-RUN git clone --branch 1.11 --single-branch --depth 1 https://github.com/openstack/swift3.git /usr/local/src/swift3 && \
+RUN git clone --branch 1.12 --single-branch --depth 1 https://github.com/openstack/swift3.git /usr/local/src/swift3 && \
     cd /usr/local/src/swift3 && \
     python setup.py develop && \
     cd -
