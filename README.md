@@ -8,20 +8,32 @@ Docker image for Swift all-in-one demo deployment
 
 This is an attempt to dockerize the instructions for a [Swift All-in-one deployment](http://docs.openstack.org/developer/swift/development_saio.html).
 
-Swift requires xattr to be enabled. This isn't supported by the AUFS filesystem, so it isn't possible for Swift to use storage within the Docker image. The workaround for this is to mount a Docker data volume from a filesystem where xattr is enabled. Storing Swift's data in a mounted volume has the further advantage that the data is persistent.
+Swift requires xattr to be enabled. With the overlay2 storage driver, Docker
+supports extended attributes. However, if you're using the older AUFS storage
+driver, it isn't possible for Swift to use storage within the Docker image.
+The workaround for this is to mount a volume from a filesystem where xattr is
+enabled (e.g. ext4 or xfs).
+
+If you'd like the data to be persistent, you should also store it in an external
+volume.
 
 ##This works:
 
-This demo stores the data in a directory at "/path/to/data".
+This uses Docker's storage:
 ```
 docker build -t bouncestorage/swift-aio .
-sudo docker run -P -v /path/to/data:/swift/nodes -t bouncestorage/swift-aio
+docker run -P -t bouncestorage/swift-aio
 curl -v -H 'X-Storage-User: test:tester' -H 'X-Storage-Pass: testing' http://127.0.0.1:<port>/auth/v1.0
 curl -v -H 'X-Auth-Token: <token-from-x-auth-token-above>' <url-from-x-storage-url-above>
 swift -A http://127.0.0.1:<port>/auth/v1.0 -U test:tester -K testing stat
 ```
 
-Discover the port by running "sudo docker ps", which will give output like this:
+To persist data, you can replace the `docker run` command with the following:
+```
+docker run -P -v /path/to/data:/swift/nodes -t bouncestorage/swift-aio
+```
+
+Discover the port by running `docker ps`, which will give output like this:
 
 ```
 ID                  IMAGE                          COMMAND               CREATED             STATUS              PORTS
@@ -67,18 +79,28 @@ export URL=http://127.0.0.1:8080/v1/AUTH_test
 export TOKEN=AUTH_tk246b80e9b72a42e68a76e0ff2aaaf051
 ```
 
-You can then run demo.sh, which will execute a series of curl commands to create a container, list various information, put itself into Swift as object "testcontainer/testobject", and retrieve itself again as "retrieved_demo.sh".
+You can then run demo.sh, which will execute a series of curl commands to create
+a container, list various information, put itself into Swift as object
+"testcontainer/testobject", and retrieve itself again as "retrieved_demo.sh".
 
 ## Notes
 
-Uses [supervisord](http://supervisord.org/) to keep the image running. You can ssh in: use sshswift.sh script, give it your password when sudo asks for it, then log in as 'swift' with password 'fingertips'.
+Uses [supervisord](http://supervisord.org/) to keep the image running. To get a shell on the container, you can use:
+
+```
+docker exec -it <container name> /bin/bash
+```
 
 Tail /var/log/syslog to see what it's doing.
 
 ##Notes on changes from Swift-AIO instructions
 
 - user and group ids are swift:swift
-- the instructions provide for using a separate partition or a loopback for storage, presumably to allow the storage capacity to be strictly limted. Neither of these was easy for a Docker n00b to implement, so I've just used /swift, with symbolic links in /srv. The storage can be limited at the OS level in the Docker image if it's a concern.
+- the instructions provide for using a separate partition or a loopback for
+  storage, presumably to allow the storage capacity to be strictly limted.
+  Neither of these was easy for a Docker n00b to implement, so I've just used
+  /swift, with symbolic links in /srv. The storage can be limited at the OS
+  level in the Docker image if it's a concern.
 - the Github sources are cloned to /usr/local/src
 
 ## License
