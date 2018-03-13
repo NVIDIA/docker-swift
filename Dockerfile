@@ -101,7 +101,5 @@ RUN	echo swift:fingertips | chpasswd; usermod -a -G sudo swift
 
 RUN echo %sudo	ALL=NOPASSWD: ALL >> /etc/sudoers
 
-VOLUME	/swift/nodes
-
 EXPOSE 8080
 CMD ["/bin/bash", "/swift/bin/launch.sh"]
