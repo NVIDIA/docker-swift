@@ -61,6 +61,7 @@ RUN git clone --branch 1.12 --single-branch --depth 1 https://github.com/opensta
     python setup.py develop && \
     cd -
 
+RUN apt-get remove -y python-urllib3
 RUN	pip install -r /usr/local/src/swift/test-requirements.txt
 
 RUN	easy_install supervisor; mkdir /var/log/supervisor/
