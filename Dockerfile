@@ -1,10 +1,4 @@
-# DOCKER-VERSION 0.6.4
-FROM	ubuntu:14.04
-
-RUN	echo "deb http://archive.ubuntu.com/ubuntu trusty-backports universe" >> /etc/apt/sources.list
-
-# workaround for Ubuntu dependency on upstart https://github.com/dotcloud/docker/issues/1024
-RUN	dpkg-divert --local --rename --add /sbin/initctl; ln -sf /bin/true /sbin/initctl
+FROM ubuntu:18.04
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
