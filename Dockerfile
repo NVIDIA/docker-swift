@@ -28,9 +28,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y --no-install-recommends git-core && \
-    git clone --branch 3.6.0 --single-branch --depth 1 https://github.com/openstack/python-swiftclient.git /usr/local/src/python-swiftclient && \
+    git clone --branch 3.7.0 --single-branch --depth 1 https://github.com/openstack/python-swiftclient.git /usr/local/src/python-swiftclient && \
     cd /usr/local/src/python-swiftclient && python setup.py develop && \
-    git clone --branch 2.20.0 --single-branch --depth 1 https://github.com/openstack/swift.git /usr/local/src/swift && \
+    git clone --branch 2.21.0 --single-branch --depth 1 https://github.com/openstack/swift.git /usr/local/src/swift && \
     cd /usr/local/src/swift && python setup.py develop && \
     apt-get remove -y --purge git-core git && \
     apt-get autoremove -y --purge && \
