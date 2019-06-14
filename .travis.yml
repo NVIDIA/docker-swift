@@ -1,4 +1,4 @@
-language: generic
+language: minimal
 env:
   global:
     - secure: "KjC0De7NK+ZJkpNtu3ghwcvQbTRa8BvzsBgsgPg2IEX0hTwc/J93ZLfLfJ5xi1nmBHE3uKm3EgBWKLHIOT/ZyswmIQyQ5XccbOxS4GBlyFw3qdIUM2MTnDcyrKO6ddyEs8v4mEcPp+bnej6d8wRCIUFi+0NzKiM5KjIglTl+c7M="  # DOCKER_EMAIL
