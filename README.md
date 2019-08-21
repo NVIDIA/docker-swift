@@ -6,7 +6,7 @@ docker-swift
 
 Docker image for Swift all-in-one demo deployment
 
-This is an attempt to dockerize the instructions for a [Swift All-in-one deployment](http://docs.openstack.org/developer/swift/development_saio.html).
+This is an attempt to dockerize the instructions for a [Swift All-in-one deployment](https://docs.openstack.org/swift/latest/development_saio.html).
 
 Swift requires xattr to be enabled. With the overlay2 storage driver, Docker
 supports extended attributes. However, if you're using the older AUFS storage
