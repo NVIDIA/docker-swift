@@ -17,7 +17,7 @@ enabled (e.g. ext4 or xfs).
 If you'd like the data to be persistent, you should also store it in an external
 volume.
 
-##This works:
+## This works:
 
 This uses Docker's storage:
 ```
@@ -93,7 +93,7 @@ docker exec -it <container name> /bin/bash
 
 Tail /var/log/syslog to see what it's doing.
 
-##Notes on changes from Swift-AIO instructions
+## Notes on changes from Swift-AIO instructions
 
 - user and group ids are swift:swift
 - the instructions provide for using a separate partition or a loopback for
