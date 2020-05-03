@@ -1,8 +1,10 @@
 FROM ubuntu:18.04
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends \
         attr \
         liberasurecode1 \
         memcached \
@@ -22,11 +24,11 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
         sqlite3 \
         sudo \
         xfsprogs && \
-    DEBIAN_FRONTEND=noninteractive apt-get clean && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     pip install --upgrade pip setuptools pytz
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+RUN apt-get update && \
     apt-get install -y --no-install-recommends git-core && \
     git clone --branch 3.8.1 --single-branch --depth 1 https://github.com/openstack/python-swiftclient.git /usr/local/src/python-swiftclient && \
     cd /usr/local/src/python-swiftclient && python setup.py develop && \
