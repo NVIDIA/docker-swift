@@ -56,6 +56,7 @@ RUN	easy_install supervisor; mkdir /var/log/supervisor/ && \
     cp /usr/local/src/swift/test/sample.conf /etc/swift/test.conf && \
     sed -i 's/\$PrivDropToGroup syslog/\$PrivDropToGroup adm/' /etc/rsyslog.conf && \
     mkdir -p /var/log/swift/hourly; chown -R syslog.adm /var/log/swift; chmod -R g+w /var/log/swift && \
+    mkdir -p /var/cache/swift; chown -R swift:swift /var/cache/swift && \
     echo swift:fingertips | chpasswd; usermod -a -G sudo swift && \
     echo %sudo ALL=NOPASSWD: ALL >> /etc/sudoers
 
