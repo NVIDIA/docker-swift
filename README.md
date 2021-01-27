@@ -105,8 +105,12 @@ Tail /var/log/syslog to see what it's doing.
 
 ## License
 
+Copyright (C) 2020 NVIDIA
+
+Copyright (C) 2019-2020 SwiftStack
+
 Copyright (C) 2015-2019 Bounce Storage
 
 Copyright (C) 2013-2015 Peter Binkley @pbinkley
 
-Licensed under the GNU General Public License, Version 2.0
+Licensed under the Apache License, Version 2.0
