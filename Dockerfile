@@ -55,7 +55,10 @@ RUN	easy_install supervisor; mkdir /var/log/supervisor/ && \
     mkdir -p /var/log/swift/hourly; chown -R syslog.adm /var/log/swift; chmod -R g+w /var/log/swift && \
     mkdir -p /var/cache/swift; chown -R swift:swift /var/cache/swift && \
     echo swift:fingertips | chpasswd; usermod -a -G sudo swift && \
-    echo %sudo ALL=NOPASSWD: ALL >> /etc/sudoers
+    echo %sudo ALL=NOPASSWD: ALL >> /etc/sudoers && \
+    ln -s /swift/nodes/1 /srv/1 && \
+    mkdir -p /swift/nodes/1 /srv/1/node/sdb1 /var/run/swift && \
+    chown -R swift:swift /swift/nodes /etc/swift /srv/1 /var/run/swift
 
 EXPOSE 8080
 CMD ["/bin/bash", "/swift/bin/launch.sh"]
