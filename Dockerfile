@@ -47,7 +47,7 @@ COPY ./misc/supervisord.conf /etc/supervisord.conf
 
 RUN	easy_install supervisor; mkdir /var/log/supervisor/ && \
     # create swift user and group
-    /usr/sbin/useradd -m -d /swift -U swift && \
+    /usr/sbin/useradd -U swift && \
     sed -i 's/RSYNC_ENABLE=false/RSYNC_ENABLE=true/' /etc/default/rsync && \
     sed -i 's/SLEEP_BETWEEN_AUDITS = 30/SLEEP_BETWEEN_AUDITS = 86400/' /usr/local/src/swift/swift/obj/auditor.py && \
     sed -i 's/\$PrivDropToGroup syslog/\$PrivDropToGroup adm/' /etc/rsyslog.conf && \
