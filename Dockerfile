@@ -25,7 +25,7 @@ RUN apt-get update && \
         xfsprogs && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    pip install --upgrade pip setuptools pytz
+    pip install pytz
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends git-core && \
