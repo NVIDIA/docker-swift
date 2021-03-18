@@ -5,7 +5,6 @@
 
 # set up storage
 su swift /swift/bin/remakerings
-su swift /swift/bin/startmain
-su swift /swift/bin/startrest
-
+su swift -c "/usr/local/bin/swift-init main start"
+su swift -c "/usr/local/bin/swift-init rest start"
 /usr/local/bin/supervisord -n -c /etc/supervisord.conf
