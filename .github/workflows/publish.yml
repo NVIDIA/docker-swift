@@ -1,0 +1,22 @@
+name: Publish the package
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get version from the tag
+        id: get_version
+        run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
+
+      - uses: actions/checkout@v2
+      - name: Build and push image
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: nvidia/docker-swift/swift-aio
+          tags: ${{ steps.get_version.outputs.version }},latest
