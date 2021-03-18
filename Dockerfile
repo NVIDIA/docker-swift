@@ -22,7 +22,6 @@ RUN apt-get update && \
         rsyslog \
         rsync \
         sqlite3 \
-        sudo \
         xfsprogs && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
@@ -53,12 +52,9 @@ RUN	easy_install supervisor; mkdir /var/log/supervisor/ && \
     sed -i 's/SLEEP_BETWEEN_AUDITS = 30/SLEEP_BETWEEN_AUDITS = 86400/' /usr/local/src/swift/swift/obj/auditor.py && \
     sed -i 's/\$PrivDropToGroup syslog/\$PrivDropToGroup adm/' /etc/rsyslog.conf && \
     mkdir -p /var/log/swift/hourly; chown -R syslog.adm /var/log/swift; chmod -R g+w /var/log/swift && \
-    mkdir -p /var/cache/swift; chown -R swift:swift /var/cache/swift && \
-    echo swift:fingertips | chpasswd; usermod -a -G sudo swift && \
-    echo %sudo ALL=NOPASSWD: ALL >> /etc/sudoers && \
     ln -s /swift/nodes/1 /srv/1 && \
-    mkdir -p /swift/nodes/1 /srv/1/node/sdb1 /var/run/swift && \
-    chown -R swift:swift /swift/nodes /etc/swift /srv/1 /var/run/swift
+    mkdir -p /swift/nodes/1 /srv/1/node/sdb1 /var/run/swift /var/cache/swift && \
+    chown -R swift:swift /swift/nodes /etc/swift /srv/1 /var/run/swift /var/cache/swift
 
 EXPOSE 8080
 CMD ["/bin/bash", "/swift/bin/launch.sh"]
