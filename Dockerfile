@@ -21,8 +21,7 @@ RUN apt-get update && \
         python3-xattr \
         rsyslog \
         rsync \
-        sqlite3 \
-        xfsprogs && \
+    && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     pip3 install supervisor pytz
