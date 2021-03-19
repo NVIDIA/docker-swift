@@ -1,8 +1,7 @@
 docker-swift
 ============
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/bouncestorage/swift-aio.svg)](https://hub.docker.com/r/bouncestorage/swift-aio/)
-[![](https://images.microbadger.com/badges/image/bouncestorage/swift-aio.svg)](https://microbadger.com/images/bouncestorage/swift-aio)
+[![Docker Pulls](https://img.shields.io/docker/pulls/dockerswiftaio/docker-swift.svg)](https://hub.docker.com/r/dockerswiftaio/docker-swift/)
 
 Docker image for Swift all-in-one demo deployment
 
@@ -17,12 +16,23 @@ enabled (e.g. ext4 or xfs).
 If you'd like the data to be persistent, you should also store it in an external
 volume.
 
+You can pull the images from the DockerHub registry:
+```
+docker pull dockerswiftaio/docker-swift:latest
+```
+
+If you need a specific version of Swift, or would like to pin to a specific
+version (recommended), you can pull the specific version like this:
+```
+docker pull dockerswiftaio/docker-swift:2.24.0
+```
+
 ## This works:
 
 This uses Docker's storage:
 ```
-docker build -t bouncestorage/swift-aio .
-docker run -P -t bouncestorage/swift-aio
+docker pull dockerswiftaio/docker-swift
+docker run -P -t dockerswiftaio/docker-swift
 curl -v -H 'X-Storage-User: test:tester' -H 'X-Storage-Pass: testing' http://127.0.0.1:<port>/auth/v1.0
 curl -v -H 'X-Auth-Token: <token-from-x-auth-token-above>' <url-from-x-storage-url-above>
 swift -A http://127.0.0.1:<port>/auth/v1.0 -U test:tester -K testing stat
@@ -30,14 +40,20 @@ swift -A http://127.0.0.1:<port>/auth/v1.0 -U test:tester -K testing stat
 
 To persist data, you can replace the `docker run` command with the following:
 ```
-docker run -P -v /path/to/data:/swift/nodes -t bouncestorage/swift-aio
+docker run -P -v /path/to/data:/swift/nodes/1/node/sdb1 -t dockerswiftaio/docker-swift
+```
+
+If you'd like to replace Swift configuration files, you can also bind mount
+them. For example:
+```
+docker run -P -v /path/to/proxy-server.conf:/etc/swift/proxy-server.conf -t dockerswiftaio/docker-swift
 ```
 
 Discover the port by running `docker ps`, which will give output like this:
 
 ```
-ID                  IMAGE                          COMMAND               CREATED             STATUS              PORTS
-159caa6f384b        bouncestorage/swift-aio:latest /bin/bash /swift/bin   9 minutes ago       Up 9 minutes        49175->22, 49176->8080
+CONTAINER ID   IMAGE                                COMMAND                  CREATED         STATUS         PORTS                     NAMES
+8f892e66b517   dockerswiftaio/docker-swift:2.24.0   "/bin/bash /swift/bi…"   7 seconds ago   Up 6 seconds   0.0.0.0:49177->8080/tcp   magical_bhaskara
 ```
 
 You want the port that is mapped to port 8080 within the Docker image, in this case 49176.
@@ -97,7 +113,7 @@ Tail /var/log/syslog to see what it's doing.
 
 - user and group ids are swift:swift
 - the instructions provide for using a separate partition or a loopback for
-  storage, presumably to allow the storage capacity to be strictly limted.
+  storage, presumably to allow the storage capacity to be strictly limited.
   Neither of these was easy for a Docker n00b to implement, so I've just used
   /swift, with symbolic links in /srv. The storage can be limited at the OS
   level in the Docker image if it's a concern.
