@@ -15,8 +15,7 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v1
         with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
-          repository: nvidia/docker-swift/swift-aio
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_KEY }}
+          repository: dockerswiftaio/docker-swift
           tags: ${{ steps.get_version.outputs.version }},latest
