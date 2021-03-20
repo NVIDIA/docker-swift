@@ -30,7 +30,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends git-core && \
     git clone --branch 3.11.1 --single-branch --depth 1 https://github.com/openstack/python-swiftclient.git /usr/local/src/python-swiftclient && \
     cd /usr/local/src/python-swiftclient && python3 setup.py develop && \
-    git clone --branch 2.25.1 --single-branch --depth 1 https://github.com/openstack/swift.git /usr/local/src/swift && \
+    git clone --branch 2.26.0 --single-branch --depth 1 https://github.com/openstack/swift.git /usr/local/src/swift && \
     cd /usr/local/src/swift && python3 setup.py develop && \
     apt-get remove -y --purge git-core git && \
     apt-get autoremove -y --purge && \
