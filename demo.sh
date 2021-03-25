@@ -20,4 +20,4 @@ curl -X PUT -i -H "X-Auth-Token: $TOKEN" -T demo.sh $URL/testcontainer/testobjec
 
 echo Retrieve object
 
-curl -X GET -i -H "X-Auth-Token: $TOKEN" -o retrieved_demo.sh $URL/testcontainer/testobject
+curl -X GET -H "X-Auth-Token: $TOKEN" -o retrieved_demo.sh $URL/testcontainer/testobject
